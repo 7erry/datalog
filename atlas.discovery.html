@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery: MongoDB Atlas advanced deployments | MongoDB Unpacked</title>
+    <link rel="icon" type="image/png" href="assets/mongodb-leaf.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #001E2B;
+            --bg-secondary: #002838;
+            --bg-card: #003345;
+            --text-primary: #fafafa;
+            --text-secondary: #b8d8e8;
+            --text-muted: #7fa8bc;
+            --accent: #00ED64;
+            --accent-dim: #00c853;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --warn-bg: rgba(248, 113, 113, 0.08);
+            --warn-border: rgba(248, 113, 113, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 30, 43, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .top-bar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .top-bar a:hover { color: var(--accent); }
+        .top-bar .sep { color: var(--text-muted); opacity: 0.35; }
+        .top-bar .doc-name {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .content {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 5rem;
+        }
+        .callout {
+            margin-bottom: 2rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--warn-border);
+            background: var(--warn-bg);
+        }
+        .callout h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #fca5a5;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .callout p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+        .markdown-body h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .markdown-body h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 0.65rem;
+        }
+        .markdown-body h2:first-of-type { margin-top: 0.5rem; }
+        .markdown-body p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body strong { color: var(--text-primary); font-weight: 600; }
+        .markdown-body ol {
+            margin: 0 0 1.25rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+        .markdown-body a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="home.html">MongoDB Unpacked</a>
+        <span class="sep">/</span>
+        <a href="atlas.html">Interactive companion</a>
+        <span class="sep">/</span>
+        <span class="doc-name">atlas.discovery.md</span>
+    </div>
+    <div class="content">
+        <div class="callout">
+            <h2>Why this matters</h2>
+            <p>Non-competitive paths—staying on ad hoc tools, fragmented stacks, or “we’ll fix it later” designs—compound as <strong>rework, incidents, and stalled decisions</strong>. The sections below name how status-quo choices fail and what delay actually costs.</p>
+        </div>
+        <article class="markdown-body">
+<h1>Discovery: MongoDB Atlas advanced deployments</h1>
+<p><strong>Companion:</strong> <code>atlas.html</code></p>
+<h2>Opening minute (discovery call)</h2>
+<p>Good to meet. When people say “we’re on Atlas,” the next question is almost always <strong>how</strong>—regions, tiers, networking, backup, and how you’ll grow without a forklift. This session is meant to translate <strong>advanced deployment patterns</strong> into decisions you can defend with security and finance. I’ll connect the knobs to outcomes: availability, blast radius, and operational load. What’s the trigger for this review—<strong>a launch</strong>, <strong>compliance</strong>, or <strong>cost and scale pressure</strong>?</p>
+<h2>Why current approaches fall short (without a competitive move)</h2>
+<p>“We’re on Atlas” without an <strong>advanced deployment design</strong> usually means defaults that were fine at MVP: single region assumptions, loose network boundaries, backup policies nobody tests, and <strong>tier upgrades as panic therapy</strong>. Non-competitive isn’t laziness—it’s <strong>no explicit trade space</strong> between blast radius, cost, and agility.</p>
+<h2>Cost of inaction</h2>
+<p>The bill and the incident queue rise together: <strong>noisy neighbors inside the org</strong>, slow failovers, and audits that surface missing evidence. Launches slip because <strong>change windows</strong> become mandatory once risk is discovered late. You pay for <strong>emergency scaling and consulting</strong> that planning would have avoided.</p>
+<h2>Ten open-ended questions (pain points &amp; buying process)</h2>
+<ol>
+<li>How is Atlas deployed today—regions, cluster tiers, peering/VPC—and what worries you about that layout?</li>
+<li>What availability story are you accountable for internally—RPO/RTO, multi-region, maintenance windows?</li>
+<li>Where have you felt pain: cost surprises, slow queries, backup/restore drills, or change management?</li>
+<li>Who approves architecture changes—enterprise architecture, security, FinOps—and what do they ask for?</li>
+<li>How do you handle non-prod environments relative to prod—parity, cost caps, or separate contracts?</li>
+<li>Is Atlas part of a broader MongoDB or cloud negotiation, and when does that renew?</li>
+<li>What would trigger a competitive evaluation or a “should we stay” review?</li>
+<li>How do you fund growth—reserved capacity, autoscaling, or manual upgrades per app?</li>
+<li>What documentation or runbooks do auditors or SRE expect you to produce?</li>
+<li>If you could redesign the deployment from scratch with no legacy constraints, what would you change first?</li>
+</ol>
+        </article>
+    </div>
+</body>
+</html>

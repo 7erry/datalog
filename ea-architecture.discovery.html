@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery: MongoDB Enterprise Advanced — architecture deep dive | MongoDB Unpacked</title>
+    <link rel="icon" type="image/png" href="assets/mongodb-leaf.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #001E2B;
+            --bg-secondary: #002838;
+            --bg-card: #003345;
+            --text-primary: #fafafa;
+            --text-secondary: #b8d8e8;
+            --text-muted: #7fa8bc;
+            --accent: #00ED64;
+            --accent-dim: #00c853;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --warn-bg: rgba(248, 113, 113, 0.08);
+            --warn-border: rgba(248, 113, 113, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 30, 43, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .top-bar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .top-bar a:hover { color: var(--accent); }
+        .top-bar .sep { color: var(--text-muted); opacity: 0.35; }
+        .top-bar .doc-name {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .content {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 5rem;
+        }
+        .callout {
+            margin-bottom: 2rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--warn-border);
+            background: var(--warn-bg);
+        }
+        .callout h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #fca5a5;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .callout p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+        .markdown-body h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .markdown-body h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 0.65rem;
+        }
+        .markdown-body h2:first-of-type { margin-top: 0.5rem; }
+        .markdown-body p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body strong { color: var(--text-primary); font-weight: 600; }
+        .markdown-body ol {
+            margin: 0 0 1.25rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+        .markdown-body a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="home.html">MongoDB Unpacked</a>
+        <span class="sep">/</span>
+        <a href="ea-architecture.html">Interactive companion</a>
+        <span class="sep">/</span>
+        <span class="doc-name">ea-architecture.discovery.md</span>
+    </div>
+    <div class="content">
+        <div class="callout">
+            <h2>Why this matters</h2>
+            <p>Non-competitive paths—staying on ad hoc tools, fragmented stacks, or “we’ll fix it later” designs—compound as <strong>rework, incidents, and stalled decisions</strong>. The sections below name how status-quo choices fail and what delay actually costs.</p>
+        </div>
+        <article class="markdown-body">
+<h1>Discovery: MongoDB Enterprise Advanced — architecture deep dive</h1>
+<p><strong>Companion:</strong> <code>ea-architecture.html</code></p>
+<h2>Opening minute (discovery call)</h2>
+<p>Thanks—<strong>Enterprise Advanced</strong> is where regulated and large-scale teams ask hard questions: deployment topology, controls, auditability, and how MongoDB fits <strong>next to</strong> existing enterprise standards. I’ll map capabilities to <strong>your non-negotiables</strong>—not a feature tour for its own sake. Which constraints are loudest right now: <strong>security/compliance</strong>, <strong>operational ownership</strong>, or <strong>performance at scale</strong>?</p>
+<h2>Why current approaches fall short (without a competitive move)</h2>
+<p>Enterprise Advanced matters when teams <strong>under-buy controls</strong>—then try to bolt audit, encryption, and ops rigor on late. Non-competitive is treating EA as a SKU checkbox instead of <strong>mapping to control frameworks and ownership</strong>.</p>
+<h2>Cost of inaction</h2>
+<p>Inaction surfaces as <strong>audit findings, delayed go-lives, and expensive exceptions</strong>. Legal and security become <strong>serial revisitors</strong> because architecture evidence was never assembled. You pay for <strong>rush implementations</strong> and reworked designs under scrutiny.</p>
+<h2>Ten open-ended questions (pain points &amp; buying process)</h2>
+<ol>
+<li>What compliance regimes or internal control frameworks apply to this workload?</li>
+<li>How do you audit database activity today, and what gaps show up in assessments?</li>
+<li>Who operates MongoDB—employees, MSP, hybrid—and what SLAs do you hold them to?</li>
+<li>What deployment patterns are mandated—on-prem, dedicated cloud, sovereign regions?</li>
+<li>How does procurement treat enterprise software—SKUs, legal terms, support entitlements?</li>
+<li>What technical proof does your security team need before production approval?</li>
+<li>Who signs the business case—CIO, CISO, head of data—and what metrics matter to them?</li>
+<li>What other vendors are in the “strategic” tier that influence MongoDB negotiations?</li>
+<li>What renewal cycle are we inside, and what leverage or constraints does that create?</li>
+<li>What would a successful EA rollout look like in your org twelve months from signature?</li>
+</ol>
+        </article>
+    </div>
+</body>
+</html>

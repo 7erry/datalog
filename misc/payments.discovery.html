@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery: MongoDB for payments playbook | MongoDB Unpacked</title>
+    <link rel="icon" type="image/png" href="assets/mongodb-leaf.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #001E2B;
+            --bg-secondary: #002838;
+            --bg-card: #003345;
+            --text-primary: #fafafa;
+            --text-secondary: #b8d8e8;
+            --text-muted: #7fa8bc;
+            --accent: #00ED64;
+            --accent-dim: #00c853;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --warn-bg: rgba(248, 113, 113, 0.08);
+            --warn-border: rgba(248, 113, 113, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 30, 43, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .top-bar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .top-bar a:hover { color: var(--accent); }
+        .top-bar .sep { color: var(--text-muted); opacity: 0.35; }
+        .top-bar .doc-name {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .content {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 5rem;
+        }
+        .callout {
+            margin-bottom: 2rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--warn-border);
+            background: var(--warn-bg);
+        }
+        .callout h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #fca5a5;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .callout p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+        .markdown-body h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .markdown-body h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 0.65rem;
+        }
+        .markdown-body h2:first-of-type { margin-top: 0.5rem; }
+        .markdown-body p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body strong { color: var(--text-primary); font-weight: 600; }
+        .markdown-body ol {
+            margin: 0 0 1.25rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+        .markdown-body a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="home.html">MongoDB Unpacked</a>
+        <span class="sep">/</span>
+        <a href="payments.html">Interactive companion</a>
+        <span class="sep">/</span>
+        <span class="doc-name">payments.discovery.md</span>
+    </div>
+    <div class="content">
+        <div class="callout">
+            <h2>Why this matters</h2>
+            <p>Non-competitive paths—staying on ad hoc tools, fragmented stacks, or “we’ll fix it later” designs—compound as <strong>rework, incidents, and stalled decisions</strong>. The sections below name how status-quo choices fail and what delay actually costs.</p>
+        </div>
+        <article class="markdown-body">
+<h1>Discovery: MongoDB for payments playbook</h1>
+<p><strong>Companion:</strong> <code>payments.html</code></p>
+<h2>Opening minute (discovery call)</h2>
+<p>Appreciate the time—<strong>payments</strong> demands correctness, audit trails, and predictable performance under spikes. MongoDB shows up when teams want <strong>flexible payment objects</strong>, strong <strong>operational models</strong>, and patterns that don’t fight the domain model. I’ll anchor on <strong>idempotency, ledgering concepts, and reconciliation</strong> without pretending compliance is one-size-fits-all. Are you building <strong>new payment flows</strong>, or <strong>replacing a strained legacy store</strong>?</p>
+<h2>Why current approaches fall short (without a competitive move)</h2>
+<p>Payments on generic patterns without <strong>idempotency, traceability, and reconciliation discipline</strong> invite subtle money bugs. Non-competitive is “it works in happy path” without <strong>failure injection</strong> culture.</p>
+<h2>Cost of inaction</h2>
+<p>Inaction shows as <strong>chargebacks, manual fixes, and audit pain</strong>—brand and regulatory exposure. Scaling events become <strong>bet-the-company weekends</strong>. You pay fines, credits, and <strong>engineering halt</strong> while trust recovers slowly.</p>
+<h2>Ten open-ended questions (pain points &amp; buying process)</h2>
+<ol>
+<li>Walk me through the payment lifecycle you support—authorization, capture, refunds, disputes—and where data lives today.</li>
+<li>What correctness failures are unacceptable—dupes, lost updates, inconsistent balances—and have you seen near-misses?</li>
+<li>How do you handle idempotency keys, out-of-order webhooks, and retries from partners?</li>
+<li>What regulatory or scheme requirements (PCI, PSD2, regional rules) shape your storage and access model?</li>
+<li>Who audits payment data flows, and what evidence do they expect?</li>
+<li>What peak-load or burst scenarios worry you—sales events, payroll, partner batch files?</li>
+<li>Who owns the database tier for payments—dedicated team or shared platform—and how do changes get approved?</li>
+<li>What’s the evaluation bar for a new store—latency, HA, backup, encryption, change control?</li>
+<li>How does procurement engage for payment-adjacent systems—long security reviews, preferred vendors?</li>
+<li>What would “we’re stable through Black Friday” mean in measurable terms for your team?</li>
+</ol>
+        </article>
+    </div>
+</body>
+</html>

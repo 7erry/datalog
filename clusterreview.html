@@ -2,6 +2,25 @@
 <html lang="en">
 
 <head>
+    <script>
+    /* DISCOVERY_QUERY_REDIRECT: ?discovery=true → sibling .discovery.html */
+    (function () {
+      try {
+        var q = new URLSearchParams(window.location.search);
+        if (String(q.get("discovery")).toLowerCase() !== "true") return;
+        var parts = window.location.pathname.split("/");
+        var file = parts.pop() || "";
+        if (!/\.html$/i.test(file) || /\.discovery\.html$/i.test(file)) return;
+        q.delete("discovery");
+        var qs = q.toString();
+        var nextFile = file.replace(/\.html$/i, ".discovery.html");
+        parts.push(nextFile);
+        var target = parts.join("/") + (qs ? "?" + qs : "") + window.location.hash;
+        window.location.replace(target);
+      } catch (e) {}
+    })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MongoDB Atlas Health Check</title>
@@ -630,7 +649,6 @@
             document.getElementById("checkdate").addEventListener("change", saveState);
         })();
     </script>
-    <script src="subscribe.js?v=eo-ph-localdev"></script>
 </body>
 
 </html>

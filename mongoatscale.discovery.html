@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery: MongoDB Atlas at scale — runbook | MongoDB Unpacked</title>
+    <link rel="icon" type="image/png" href="assets/mongodb-leaf.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #001E2B;
+            --bg-secondary: #002838;
+            --bg-card: #003345;
+            --text-primary: #fafafa;
+            --text-secondary: #b8d8e8;
+            --text-muted: #7fa8bc;
+            --accent: #00ED64;
+            --accent-dim: #00c853;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --warn-bg: rgba(248, 113, 113, 0.08);
+            --warn-border: rgba(248, 113, 113, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 30, 43, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .top-bar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .top-bar a:hover { color: var(--accent); }
+        .top-bar .sep { color: var(--text-muted); opacity: 0.35; }
+        .top-bar .doc-name {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .content {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 5rem;
+        }
+        .callout {
+            margin-bottom: 2rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--warn-border);
+            background: var(--warn-bg);
+        }
+        .callout h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #fca5a5;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .callout p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+        .markdown-body h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .markdown-body h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 0.65rem;
+        }
+        .markdown-body h2:first-of-type { margin-top: 0.5rem; }
+        .markdown-body p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body strong { color: var(--text-primary); font-weight: 600; }
+        .markdown-body ol {
+            margin: 0 0 1.25rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+        .markdown-body a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="home.html">MongoDB Unpacked</a>
+        <span class="sep">/</span>
+        <a href="mongoatscale.html">Interactive companion</a>
+        <span class="sep">/</span>
+        <span class="doc-name">mongoatscale.discovery.md</span>
+    </div>
+    <div class="content">
+        <div class="callout">
+            <h2>Why this matters</h2>
+            <p>Non-competitive paths—staying on ad hoc tools, fragmented stacks, or “we’ll fix it later” designs—compound as <strong>rework, incidents, and stalled decisions</strong>. The sections below name how status-quo choices fail and what delay actually costs.</p>
+        </div>
+        <article class="markdown-body">
+<h1>Discovery: MongoDB Atlas at scale — runbook</h1>
+<p><strong>Companion:</strong> <code>mongoatscale.html</code></p>
+<h2>Opening minute (discovery call)</h2>
+<p>Good to meet. “At scale” usually means <strong>a mix of performance, cost discipline, and operational readiness</strong>—not one knob. This runbook style is meant to turn patterns into <strong>checklists your team can run</strong>. What’s the symptom driving this—<strong>latency</strong>, <strong>cost</strong>, <strong>incident frequency</strong>, or <strong>prep for a major event</strong>?</p>
+<h2>Why current approaches fall short (without a competitive move)</h2>
+<p>At-scale runbooks don’t appear by accident; without them, teams <strong>react to metrics</strong> instead of preventing drift. Non-competitive scale means <strong>heroic individuals</strong> holding production together.</p>
+<h2>Cost of inaction</h2>
+<p>Incidents, <strong>unplanned spend</strong>, and launch slips become normal. Leaders hear “we need more hardware” without a <strong>prioritized reliability roadmap</strong>. Talent attrition rises when <strong>on-call is chaos</strong>.</p>
+<h2>Ten open-ended questions (pain points &amp; buying process)</h2>
+<ol>
+<li>What metrics tell you MongoDB is “at scale” for your org—QPS, data size, shard count, monthly spend?</li>
+<li>Where do you feel the system creaking—hot shards, disk IO, connection storms, query patterns?</li>
+<li>How do you balance reliability investments vs feature delivery when both compete for the same engineers?</li>
+<li>Who approves spend changes—reserved instances, tier bumps, consulting engagements?</li>
+<li>What events are you preparing for—product launch, seasonal traffic, M&amp;A data integration?</li>
+<li>How mature are your runbooks and on-call playbooks for MongoDB-specific failure modes?</li>
+<li>What would a third-party or partner need to prove before you’d trust their recommendations?</li>
+<li>How do you prioritize technical debt discovered during reviews?</li>
+<li>What internal scorecards does leadership use to judge platform health?</li>
+<li>What does success look like ninety days after implementing runbook improvements?</li>
+</ol>
+        </article>
+    </div>
+</body>
+</html>

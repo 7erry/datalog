@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery: MongoDB Atlas health check | MongoDB Unpacked</title>
+    <link rel="icon" type="image/png" href="assets/mongodb-leaf.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #001E2B;
+            --bg-secondary: #002838;
+            --bg-card: #003345;
+            --text-primary: #fafafa;
+            --text-secondary: #b8d8e8;
+            --text-muted: #7fa8bc;
+            --accent: #00ED64;
+            --accent-dim: #00c853;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --warn-bg: rgba(248, 113, 113, 0.08);
+            --warn-border: rgba(248, 113, 113, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 30, 43, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .top-bar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .top-bar a:hover { color: var(--accent); }
+        .top-bar .sep { color: var(--text-muted); opacity: 0.35; }
+        .top-bar .doc-name {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .content {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 5rem;
+        }
+        .callout {
+            margin-bottom: 2rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--warn-border);
+            background: var(--warn-bg);
+        }
+        .callout h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #fca5a5;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .callout p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+        .markdown-body h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .markdown-body h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 0.65rem;
+        }
+        .markdown-body h2:first-of-type { margin-top: 0.5rem; }
+        .markdown-body p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body strong { color: var(--text-primary); font-weight: 600; }
+        .markdown-body ol {
+            margin: 0 0 1.25rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+        .markdown-body a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="home.html">MongoDB Unpacked</a>
+        <span class="sep">/</span>
+        <a href="clusterreview.html">Interactive companion</a>
+        <span class="sep">/</span>
+        <span class="doc-name">clusterreview.discovery.md</span>
+    </div>
+    <div class="content">
+        <div class="callout">
+            <h2>Why this matters</h2>
+            <p>Non-competitive paths—staying on ad hoc tools, fragmented stacks, or “we’ll fix it later” designs—compound as <strong>rework, incidents, and stalled decisions</strong>. The sections below name how status-quo choices fail and what delay actually costs.</p>
+        </div>
+        <article class="markdown-body">
+<h1>Discovery: MongoDB Atlas health check</h1>
+<p><strong>Companion:</strong> <code>clusterreview.html</code></p>
+<h2>Opening minute (discovery call)</h2>
+<p>Appreciate you joining. Think of this as a <strong>structured health pass</strong> on Atlas—not a generic “best practices” PDF. We’ll look at signals that predict <strong>incidents, surprise bills, and slow queries</strong> before they become fires. I want to leave you with a short list of <strong>prioritized fixes</strong>, not a hundred tickets. Is this cluster <strong>mission-critical production</strong>, or are we sizing and hardening <strong>ahead of a migration</strong>?</p>
+<h2>Why current approaches fall short (without a competitive move)</h2>
+<p>Without periodic health discipline, clusters drift: <strong>indexes nobody dares drop</strong>, zombie connections, backup policies never restored, and metrics nobody ties to <strong>customer pain</strong>. Non-competitive operations mean <strong>tribal knowledge</strong> and heroics—not a prioritized risk backlog.</p>
+<h2>Cost of inaction</h2>
+<p>Inaction converts to <strong>preventable incidents</strong>, overtime, and renewals negotiated from weakness because reliability stories are thin. Performance regressions become <strong>“MongoDB is slow”</strong> narratives instead of fixable design issues. You pay for <strong>fire drills</strong> that a structured review would have flagged as yellow weeks earlier.</p>
+<h2>Ten open-ended questions (pain points &amp; buying process)</h2>
+<ol>
+<li>What symptoms are you seeing—latency, errors, cost spikes, failed deploys—and how do users experience them?</li>
+<li>How do you monitor MongoDB today—Atlas UI, APM, logs, custom metrics—and where are the blind spots?</li>
+<li>When did you last run a restore or failover drill, and what did you learn?</li>
+<li>Who owns remediation—DBA, platform, app teams—and how do escalations work?</li>
+<li>What change-management rules slow fixes down, and which ones you consider non-negotiable?</li>
+<li>Is there budget or appetite for reserved tiers, consulting, or training tied to this review?</li>
+<li>What would define success from this engagement—a report, fixed issues, or a roadmap?</li>
+<li>Are there upcoming events—launches, holidays, audits—that raise the stakes?</li>
+<li>How do you prioritize technical debt vs feature work when both compete for the same team?</li>
+<li>What would make your leadership confident MongoDB is “under control” for the next year?</li>
+</ol>
+        </article>
+    </div>
+</body>
+</html>

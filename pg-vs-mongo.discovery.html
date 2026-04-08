@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery: Postgres and MongoDB at humongous scale | MongoDB Unpacked</title>
+    <link rel="icon" type="image/png" href="assets/mongodb-leaf.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #001E2B;
+            --bg-secondary: #002838;
+            --bg-card: #003345;
+            --text-primary: #fafafa;
+            --text-secondary: #b8d8e8;
+            --text-muted: #7fa8bc;
+            --accent: #00ED64;
+            --accent-dim: #00c853;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --warn-bg: rgba(248, 113, 113, 0.08);
+            --warn-border: rgba(248, 113, 113, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 30, 43, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .top-bar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .top-bar a:hover { color: var(--accent); }
+        .top-bar .sep { color: var(--text-muted); opacity: 0.35; }
+        .top-bar .doc-name {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .content {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 5rem;
+        }
+        .callout {
+            margin-bottom: 2rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--warn-border);
+            background: var(--warn-bg);
+        }
+        .callout h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #fca5a5;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .callout p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+        .markdown-body h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .markdown-body h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 0.65rem;
+        }
+        .markdown-body h2:first-of-type { margin-top: 0.5rem; }
+        .markdown-body p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body strong { color: var(--text-primary); font-weight: 600; }
+        .markdown-body ol {
+            margin: 0 0 1.25rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+        .markdown-body a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="home.html">MongoDB Unpacked</a>
+        <span class="sep">/</span>
+        <a href="pg-vs-mongo.html">Interactive companion</a>
+        <span class="sep">/</span>
+        <span class="doc-name">pg-vs-mongo.discovery.md</span>
+    </div>
+    <div class="content">
+        <div class="callout">
+            <h2>Why this matters</h2>
+            <p>Non-competitive paths—staying on ad hoc tools, fragmented stacks, or “we’ll fix it later” designs—compound as <strong>rework, incidents, and stalled decisions</strong>. The sections below name how status-quo choices fail and what delay actually costs.</p>
+        </div>
+        <article class="markdown-body">
+<h1>Discovery: Postgres and MongoDB at humongous scale</h1>
+<p><strong>Companion:</strong> <code>pg-vs-mongo.html</code></p>
+<h2>Opening minute (discovery call)</h2>
+<p>Appreciate you joining. This is the honest <strong>Postgres vs MongoDB at serious scale</strong> conversation—join storms, MVCC behavior, connection economics, and when document modeling reduces pressure. I’m not here to declare a religion; I’m here to align on <strong>where each engine earns its keep</strong>. What failure mode are you seeing today—<strong>latency tail</strong>, <strong>write bottlenecks</strong>, or <strong>operational complexity</strong>?</p>
+<h2>Why current approaches fall short (without a competitive move)</h2>
+<p>Postgres at huge scale without honest tradeoffs leads to <strong>connection storms, MVCC pain, and ORM-generated join monsters</strong>—then MongoDB is dismissed because “we’re a Postgres shop.” Non-competitive is <strong>identity over fit</strong>.</p>
+<h2>Cost of inaction</h2>
+<p>Cost is <strong>expensive vertical scaling</strong>, specialized DBAs stretched thin, and features delayed by <strong>schema migration fear</strong>. Opportunity cost grows when document or scale-out models would <strong>reduce blast radius</strong> for specific workloads.</p>
+<h2>Ten open-ended questions (pain points &amp; buying process)</h2>
+<ol>
+<li>What workload traits push Postgres hardest for you—wide tables, heavy writes, connection churn, big JSON?</li>
+<li>Where has scaling Postgres created organizational drag—specialists, tuning rituals, hardware spend?</li>
+<li>Are you considering MongoDB for net-new workloads, migration, or hybrid coexistence?</li>
+<li>Who advocates for Postgres vs document stores internally, and what evidence would shift the debate?</li>
+<li>How do you handle reporting and analytics when OLTP is under stress?</li>
+<li>What buying constraints apply—existing EA with a cloud vendor, enterprise Postgres support contracts?</li>
+<li>What timeline and triggers would cause you to act—renewal, incident, new product bet?</li>
+<li>Who signs off on polyglot persistence vs standardization mandates?</li>
+<li>What risks worry you about splitting data across two operational systems?</li>
+<li>What does a fair comparison look like in your environment—same team, same SLA, same data?</li>
+</ol>
+        </article>
+    </div>
+</body>
+</html>

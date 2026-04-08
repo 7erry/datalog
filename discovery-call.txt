@@ -1,0 +1,122 @@
+agenticmemory.html — Agentic memory on MongoDB
+“Thanks for making time. I’m glad we’re digging into agentic memory—the layer that lets agents remember context, retrieve what matters, and stay coherent across sessions. A lot of teams are stuck between bolting on a vector DB and keeping operational data in one place; MongoDB is increasingly the place teams unify that story. In the next bit I’ll walk through how we think about memory patterns—short-term vs long-term, retrieval, and governance—so it’s not just ‘embeddings in a bucket.’ Before I go deep: what’s driving this for you right now—a specific agent product, or platform standards your teams have to follow?”
+
+aggregations.html — Aggregation pipeline visualizer
+“Good to connect. Today is really about how your team reasons about data transformations—the aggregation pipeline is where MongoDB shines for analytics-style workloads without shipping everything to another system. This walkthrough is visual on purpose: most pain shows up when pipelines get long, opaque, and hard to review. I want to make stages, costs, and outcomes feel tangible. To aim this usefully: are you mostly fighting slow dashboards, ETL-style pipelines, or ad hoc analyst queries?”
+
+aimongo.html — Architecting intelligence / Atlas Vector Search
+“Appreciate you carving this out. We’re here because vector search stopped being a science experiment—it’s part of how products ship search, recommendations, and RAG. The real design question is whether you want another specialized stack or a path where vectors live next to the documents and metadata you already trust. I’ll keep this grounded in architecture choices: indexing, hybrid search, latency, and who operates it. What’s your north star—time to first good retrieval, or long-term TCO and fewer moving parts?”
+
+aisearch.html — AI search platforms (Azure vs Atlas vs Kendra)
+“Thanks—this is a vendor and architecture conversation as much as a feature one. Teams evaluating managed AI search usually care about relevance, connectors, security boundaries, and what it costs when usage spikes. I’ll frame this as an honest comparison: where each option wins, where it gets expensive, and what you’d still own operationally. To set the table: are you replacing something already in production, or greenfield for a new product?”
+
+atlas.html — Atlas advanced deployments
+“Good to meet. When people say ‘we’re on Atlas,’ the next question is almost always how—regions, tiers, networking, backup, and how you’ll grow without a forklift. This session is meant to translate advanced deployment patterns into decisions you can defend with security and finance. I’ll connect the knobs to outcomes: availability, blast radius, and operational load. What’s the trigger for this review—a launch, compliance, or cost and scale pressure?”
+
+caveats.html — Qdrant / scale performance angles
+“Thanks for the time. This one is intentionally a ‘what actually matters at scale’ lens—not marketing checklists. If you’re comparing vector engines, the winning story on a slide often breaks when you look at memory, indexing, filtering under load, and ops. I’ll walk through the caveats teams wish they’d known earlier. Are you benchmarking for a fixed corpus or high-churn, high-write workloads?”
+
+changelog.html — MongoDB Unpacked changelog
+“Quick intro: this deck is the what changed view for the MongoDB Unpacked material—useful when your team wants to know what’s new, what moved, and what to revisit. On a discovery call, my goal is to understand how you consume updates—do you need executive summaries, deep dives for architects, or enablement for builders? What would make this kind of changelog actually useful in your workflow?”
+
+clusterreview.html — Atlas health check
+“Appreciate you joining. Think of this as a structured health pass on Atlas—not a generic ‘best practices’ PDF. We’ll look at signals that predict incidents, surprise bills, and slow queries before they become fires. I want to leave you with a short list of prioritized fixes, not a hundred tickets. Is this cluster mission-critical production, or are we sizing and hardening ahead of a migration?”
+
+cosmosdb_documentdb.html — Atlas vs Cosmos DB vs DocumentDB
+“Good to connect—this is the ‘imitation game’ conversation: document APIs that look familiar but differ in consistency, operations, and what you’re actually buying. I’ll keep it practical: migration friction, pricing dynamics, and where teams get surprised after the POC. What prompted the eval—Azure affinity, DocumentDB in the path, or MongoDB compatibility as a requirement?”
+
+crud.html — CRUD operations guide
+“Thanks for making time. Sometimes CRUD sounds basic, but it’s where data modeling, indexing, and application patterns either stay healthy or quietly rot. I want to align on how your team does inserts, updates, deletes, and reads at scale—especially idempotency, schema flexibility, and performance pitfalls. Are we talking greenfield API design, or tuning an app that’s already loud in production?”
+
+cts.html — Project Sentinel / Cognizant AI ops
+“Appreciate the conversation. This is framed around AI-powered operations—the kind of program where observability, automation, and governance have to meet enterprise reality. I’ll connect the narrative to outcomes: fewer Sev-1s, faster mean-time-to-understand, and safer change. Who’s the primary buyer here—platform engineering, SRE, or a business unit sponsoring the initiative?”
+
+ddp.html — Developer Data Platform (current)
+“Good to meet. MongoDB’s pitch on the Developer Data Platform is simple in words and rich in implications: one place for operational data, search, and increasingly AI-native workloads without fragmenting your stack. I want to understand your application portfolio—what you’d unify first, and what has to stay specialized. What’s the one workload you’d love to stop duct-taping?”
+
+ddp_old.html — Developer Data Platform (older variant)
+“Thanks—this is an earlier take on the Developer Data Platform story; it’s useful if you want to see how the narrative evolved or compare messaging. For discovery, I care more about your current constraints: team skills, existing data stores, and compliance boundaries. Are you comparing Atlas to a best-of-breed stack, or trying to consolidate?”
+
+demo.html — Atlas / DDP (compact demo)
+“Appreciate you joining—this is a tighter Atlas / DDP demo meant to orient fast. I’ll hit the platform shape at a high level: what developers touch day-to-day, and what platform teams operate. Before I drive clicks: what would ‘success’ look like for you after thirty minutes—a technical proof, a procurement path, or alignment with your architects?”
+
+demo2.html — Atlas developer data platform (hero-style)
+“Good to connect. This version leans into the big picture—Atlas as the place teams build modern apps with less integration tax. I’ll keep energy high but stay concrete: data model, scaling model, and the services you’d actually turn on. What’s your timeline—this quarter pilot, or longer-range strategy?”
+
+ea-architecture.html — Enterprise Advanced architecture
+“Thanks—Enterprise Advanced is where regulated and large-scale teams ask hard questions: deployment topology, controls, auditability, and how MongoDB fits next to existing enterprise standards. I’ll map capabilities to your non-negotiables—not a feature tour for its own sake. Which constraints are loudest right now: security/compliance, operational ownership, or performance at scale?”
+
+elastic_mongo.html — Elasticsearch vs MongoDB search
+“Appreciate the time. This is a search consolidation conversation: Elasticsearch is powerful, but many teams are paying for sync complexity, dual stacks, and operational overhead. I’ll compare honestly—where Atlas Search is strong, where you’d still pair tools, and how to think about migration risk. Are you trying to replace Elasticsearch, or narrow what it has to do?”
+
+eytaxquestion.html — SQL blobs vs MongoDB (tax questionnaires)
+“Good to meet. The heart of this is questionnaire and form data that doesn’t fit cleanly into rectangular SQL without awkward JSON blobs and painful evolution. MongoDB’s document model tends to win when schema changes often and you need nested, versioned answers without migrations every sprint. Is the pain mostly developer velocity, reporting, or compliance and audit?”
+
+ha-demo.html — High availability demo
+“Thanks—this one is visceral: what happens when nodes fail, regions misbehave, and clients keep writing. HA isn’t a checkbox; it’s behavior under failure plus your app’s retry and idempotency story. I’ll walk through the mechanics in a way your DBAs and app teams can share vocabulary. Are you designing for single-region HA, or real multi-region expectations?”
+
+hnsw.html — HNSW visualizer
+“Appreciate you joining. If vectors are new to your team, HNSW is the algorithm behind a lot of fast approximate search—this is about building intuition, not proving math. I want you to leave understanding accuracy vs speed tradeoffs and why tuning matters. Is this for education, or are you choosing an index strategy for production?”
+
+home.html — MongoDB Unpacked hub
+“Good to connect—think of this as the front door to MongoDB Unpacked: a map of interactive guides rather than a single whitepaper. Discovery for me is about where you are on the journey—migrating, scaling, adding search/AI, or standardizing patterns. Which topic should we deep-link into first so this isn’t a random tour?”
+
+matrix.html — Architecture decision matrix
+“Thanks. This is built for decision hygiene: when stakeholders disagree, a matrix forces criteria, weighting, and evidence. I’ll use it to clarify trade-offs across scale, ops model, cost, and team skills—not to declare a winner by slogan. What decision are you trying to make in the next 30–60 days?”
+
+migrations.html — Migration toolkit comparison
+“Appreciate the time—migrations are where projects live or die, and tool choice is only part of it. I’ll compare approaches on fidelity, cutover risk, throughput, and validation—what you can prove before you flip traffic. Are you coming from relational, another document store, or a homegrown pipeline?”
+
+mongoatscale.html — Atlas at scale runbook
+“Good to meet. ‘At scale’ usually means a mix of performance, cost discipline, and operational readiness—not one knob. This runbook style is meant to turn patterns into checklists your team can run. What’s the symptom driving this—latency, cost, incident frequency, or prep for a major event?”
+
+mongoatscalev2.html — At scale command center (v2)
+“Thanks—this is the command-center view of operating Atlas at scale: more operational, more ‘pilot’s dashboard’ than essay. I’ll orient you to how teams monitor, prioritize, and escalate. Who owns MongoDB day-to-day—a central platform team, or distributed squads?”
+
+multitenancy.html — Multi-tenancy strategies
+“Appreciate you joining. Multi-tenancy is one of those topics that sounds solved until you hit noisy neighbors, billing fairness, and blast radius. I’ll walk through common patterns—database-per-tenant, collection-per-tenant, shared collections—and what breaks first at scale. Are you B2B SaaS, internal platforms, or something else?”
+
+my-weather-app/index.html — Weather app demo
+“Good to connect—this is a small front-end demo app (weather) we can use to talk about developer experience, APIs, and how fast a team can ship when the stack is straightforward. Discovery-wise, I’m curious whether you’re evaluating MongoDB as part of a modern app stack, or using a simple app as a sandbox for integration patterns. What do you want to prove in a prototype?”
+
+oracle_mongo.html — Oracle → MongoDB
+“Thanks—this is a relational-to-document shift conversation, and the hard part is rarely syntax; it’s transactions, reporting, stored procedures, and organizational habit. I’ll focus on a sane migration path: what to modernize first, what to emulate temporarily, and how to de-risk cutover. What Oracle footprint are we talking about—OLTP apps, batch/reporting, or mixed?”
+
+payments.html — Payments playbook
+“Appreciate the time—payments demands correctness, audit trails, and predictable performance under spikes. MongoDB shows up when teams want flexible payment objects, strong operational models, and patterns that don’t fight the domain model. I’ll anchor on idempotency, ledgering concepts, and reconciliation without pretending compliance is one-size-fits-all. Are you building new payment flows, or replacing a strained legacy store?”
+
+perf.html — Interactive benchmark performance
+“Good to meet. Benchmarks are only useful when we agree on workload shape—this is about interpreting results, not worshipping a bar chart. I’ll connect metrics to what your users feel and what your infra bill becomes. What workload are you trying to model—read-heavy, write-heavy, or mixed transactional?”
+
+performance_visualization.html — Performance graph builder
+“Thanks—this tool is for exploring performance visually when numbers alone don’t persuade stakeholders. Discovery for me is: what story are you trying to tell—capacity planning, before/after tuning, or vendor comparison? Who’s the audience for the charts—engineering leadership or finance?”
+
+pg-vs-mongo.html — Postgres and MongoDB at huge scale
+“Appreciate you joining. This is the honest Postgres vs MongoDB at serious scale conversation—join storms, MVCC behavior, connection economics, and when document modeling reduces pressure. I’m not here to declare a religion; I’m here to align on where each engine earns its keep. What failure mode are you seeing today—latency tail, write bottlenecks, or operational complexity?”
+
+pgmdb.html — PostgreSQL vs MongoDB transactions (infographic)
+“Good to meet—this one zooms in on transactions: what guarantees mean in practice, how failures surface, and how app patterns differ. Useful when your architects want a shared mental model without a week of reading. Are you deciding greenfield, or defending a Mongo choice to a Postgres-centric org?”
+
+planvisualizer.html — Query plan visualizer
+“Thanks—if you’re tuning MongoDB, the plan is the truth: which indexes win, where sorts hurt, and what the database actually does. This is about making explain output legible so developers stop guessing. Is your pain mostly slow finds, aggregations, or unstable plans after data growth?”
+
+qdrant.html — Atlas Search vs Qdrant
+“Appreciate the time—Qdrant is a strong specialized vector store; the strategic question is whether you need that separation or you can meet SLAs inside Atlas. I’ll compare on ops, filtering, hybrid workflows, and how your app already stores data. Is your vector workload pure similarity, or heavy metadata filtering + hybrid search?”
+
+readme.html — README (MongoDB Unpacked)
+“Good to connect—this README orients people to what MongoDB Unpacked is, how to navigate it, and how to use it responsibly internally. Discovery-wise, I want to learn who consumes this—enablement, solution architects, customers—and what ‘done’ looks like when you share it. Are you trying to standardize learning paths or support a specific initiative?”
+
+security.html — Atlas security (defense in depth)
+“Thanks—security conversations should start with threat model and boundaries, not a feature list. Atlas bundles a lot—identity, network isolation, encryption, auditing—but the win is when it maps cleanly to your controls and your regulators’ questions. What assessment is coming—SOC2-style, highly regulated industry, or enterprise security review?”
+
+speciality.html — Atlas Search vs specialty engines
+“Appreciate you joining. This is the broader specialty search and vector landscape—Elasticsearch, Pinecone, Qdrant—against a unified Atlas approach. I’ll keep it grounded in workflow: how many systems you sync, who operates them, and what breaks at scale. Are you optimizing for best-of-breed, or platform consolidation?”
+
+timeseries.html — Time series collections
+“Good to meet—time series workloads have their own physics: ingestion rate, retention, downsampling, and query patterns. MongoDB time series collections are aimed at keeping hot data efficient without bolting on a separate TSDB for every use case. What domain is this—metrics, IoT, financial ticks, or something else?”
+
+transactional_db.html — Database architecture showdown
+“Thanks—this is a competitive architecture pass across several transactional stores, always anchored back to MongoDB’s trade space. It’s useful when your team is comparing Cockroach, Scylla, Postgres/EDB, Dynamo, and wants arguments that aren’t Twitter threads. Which competitor is actually on the table for your next decision?”
+
+zoom-architecture.html — Zoom reference architecture on MongoDB
+“Appreciate the time—this is a real-world scale pattern conversation modeled after how demanding collaboration platforms think about global distribution, resilience, and data locality. We’ll use it to translate architecture diagrams into questions you can ask about your own system. Are you chasing multi-region active-active, or strong consistency with DR?”

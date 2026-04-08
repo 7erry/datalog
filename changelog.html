@@ -2,11 +2,29 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://gc.zgo.at https://eocampaign1.com https://www.google.com https://www.gstatic.com https://us-assets.i.posthog.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://gallery.eo.page; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://mongodbunboxed.goatcounter.com https://buttondown.com https://emailoctopus.com https://eocampaign1.com https://www.google.com https://cloudflare-dns.com https://us.i.posthog.com https://us-assets.i.posthog.com; frame-src https://www.google.com;">
+    <script>
+    /* DISCOVERY_QUERY_REDIRECT: ?discovery=true → sibling .discovery.html */
+    (function () {
+      try {
+        var q = new URLSearchParams(window.location.search);
+        if (String(q.get("discovery")).toLowerCase() !== "true") return;
+        var parts = window.location.pathname.split("/");
+        var file = parts.pop() || "";
+        if (!/\.html$/i.test(file) || /\.discovery\.html$/i.test(file)) return;
+        q.delete("discovery");
+        var qs = q.toString();
+        var nextFile = file.replace(/\.html$/i, ".discovery.html");
+        parts.push(nextFile);
+        var target = parts.join("/") + (qs ? "?" + qs : "") + window.location.hash;
+        window.location.replace(target);
+      } catch (e) {}
+    })();
+    </script>
+
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.googletagmanager.com https://gc.zgo.at; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://www.google-analytics.com https://mongodbunboxed.goatcounter.com https://buttondown.com; frame-ancestors 'none';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/tw-prod.min.css">
     <title>Changelog — MongoDB Unpacked</title>
     <link rel="icon" type="image/png" href="assets/mongodb-leaf.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -124,6 +142,28 @@
             font-size: .85rem;
             line-height: 1.5;
             max-width: 560px
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            margin-top: .75rem;
+            padding: .45rem .9rem;
+            border-radius: 99px;
+            background: var(--mg);
+            color: #0a0e17;
+            font-weight: 600;
+            font-size: .78rem;
+            text-decoration: none;
+            transition: all .2s;
+            border: none;
+            cursor: pointer
+        }
+
+        .hero-cta:hover {
+            box-shadow: 0 4px 16px rgba(0, 237, 100, 0.25);
+            transform: translateY(-1px)
         }
 
         .timeline {
@@ -274,26 +314,15 @@
 
         <div class="hero">
             <h1>Changelog</h1>
-            <p>What's new, what changed, and what got rebuilt.</p>
+            <p>What's new, what changed, and what got rebuilt. Subscribe to get email updates when we ship new content.</p>
+            <button class="hero-cta" id="heroSubscribeBtn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+                Subscribe for updates
+            </button>
         </div>
 
         <div class="timeline">
-
-            <div class="year-label">April 2026</div>
-
-            <div class="entry">
-                <div class="entry-date">Apr 2</div>
-                <div class="entry-body">
-                    <div class="entry-meta">
-                        <span class="entry-badge badge-update">Update</span>
-                        <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
-                                <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
-                    </div>
-                    <div class="entry-title">Removed site-wide subscribe / “get notified” UI</div>
-                    <div class="entry-desc">Dropped the EmailOctopus-backed subscribe script and floating launcher from all HTML pages, and tightened Content-Security-Policy entries that existed only for that integration.</div>
-                </div>
-            </div>
 
             <div class="year-label">March 2026</div>
 
@@ -310,7 +339,7 @@
                     <div class="entry-desc">A comprehensive 93-point health check across 13 sections: cluster configuration, replication, storage, memory, connections, indexing, query performance, security, backups, alerts, sharding, schema design, and networking. Includes an interactive checklist tool with status tracking, owner assignment, and CSV export.</div>
                     <div class="entry-links">
                         <a href="clusterreview.html">Interactive Checklist →</a>
-                        <a href="readme/readme.html?file=healthcheck-README.md">Full Reference Guide →</a>
+                        <a href="readme.html?file=healthcheck-README.md">Full Reference Guide →</a>
                     </div>
                 </div>
             </div>
@@ -339,10 +368,10 @@
                         <span class="entry-badge badge-new">New</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Email Collection & Changelog</div>
-                    <div class="entry-desc">Subscribe-for-updates popup (EmailOctopus) on the home page and content pages for new releases.</div>
+                    <div class="entry-desc">Added subscribe-for-updates modal on the home page and this changelog page to track all content additions and updates.</div>
                     <div class="entry-links">
                         <a href="https://saiteja05.github.io/datalog/changelog.html">changelog.html →</a>
                         <a href="https://saiteja05.github.io/datalog/home.html">home.html →</a>
@@ -357,7 +386,7 @@
                         <span class="entry-badge badge-new">New Page</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Migration Toolkit</div>
                     <div class="entry-desc">Comprehensive comparison of 5 MongoDB migration tools — mongodump, mongosync, Atlas Live Migration, mongomirror, and AWS DMS. Covers internal mechanisms (oplog vs change streams), platform support, version compatibility, host resource requirements, resilience/recovery, pros/cons, caveats, decision flowchart, and references.</div>
@@ -374,7 +403,7 @@
                         <span class="entry-badge badge-update">Update</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Competitive Intelligence — Deep Technical Refresh</div>
                     <div class="entry-desc">Major content update across all competitive pages. Added internal engine architecture diagrams for Elasticsearch, Pinecone, Qdrant, CockroachDB, ScyllaDB, PostgreSQL, and DynamoDB. New high-level radar charts, search-specific scaling analysis, and expanded documentation references.</div>
@@ -394,7 +423,7 @@
                         <span class="entry-badge badge-new">New Page</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Security — Defense in Depth</div>
                     <div class="entry-desc">Five-layer security model covering network isolation, authentication, authorization, encryption, and auditing. Interactive architecture, code examples, compliance certifications (SOC 2, HIPAA, PCI DSS, FedRAMP), and shared responsibility model.</div>
@@ -411,7 +440,7 @@
                         <span class="entry-badge badge-new">New Page</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Agentic Memory on MongoDB</div>
                     <div class="entry-desc">Interactive guide to agent memory types (Short Term, Long Term, Procedural, Taxonomic) mapped to MongoDB Atlas features. Agent lifecycle visualization, framework integration code for LangChain, CrewAI, LlamaIndex, and more. Includes MCP Server and Voyage AI embeddings.</div>
@@ -430,7 +459,7 @@
                         <span class="entry-badge badge-launch">Overview</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">MongoDB Atlas — Developer Data Platform</div>
                     <div class="entry-desc">Fully managed, multi-cloud developer data platform. Automates operations and simplifies building modern applications at any scale. Executive and developer views.</div>
@@ -448,7 +477,7 @@
                         <span class="entry-badge badge-launch">Overview</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">How to Choose a Database?</div>
                     <div class="entry-desc">Interactive decision framework to help teams evaluate and choose the right database technology — walks through workload characteristics, scalability needs, and consistency requirements.</div>
@@ -465,7 +494,7 @@
                         <span class="entry-badge badge-launch">Overview</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Enterprise Advanced Architecture</div>
                     <div class="entry-desc">Deep dive into Ops Manager, backup &amp; recovery, encryption, monitoring, HA architecture, and deployment models (Kubernetes vs bare metal).</div>
@@ -482,7 +511,7 @@
                         <span class="entry-badge badge-launch">Availability</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Running MongoDB at Scale</div>
                     <div class="entry-desc">How MongoDB handles massive workloads with horizontal scaling, sharding, and high availability. Covers shard key selection, balancer, chunk migration, and topology design.</div>
@@ -499,7 +528,7 @@
                         <span class="entry-badge badge-launch">Availability</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">High Availability Demo</div>
                     <div class="entry-desc">Interactive demonstration of MongoDB's replica set failover, elections, and multi-region high availability.</div>
@@ -516,7 +545,7 @@
                         <span class="entry-badge badge-launch">Availability</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Multi-Tenancy Strategies</div>
                     <div class="entry-desc">Architectural patterns for building multi-tenant SaaS applications — database-per-tenant, collection-per-tenant, shared collections with tenant isolation.</div>
@@ -533,7 +562,7 @@
                         <span class="entry-badge badge-launch">Capabilities</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">CRUD Operations</div>
                     <div class="entry-desc">Master MongoDB's API for creating, reading, updating, and deleting documents — insertOne, find, updateMany, bulkWrite, and more.</div>
@@ -550,7 +579,7 @@
                         <span class="entry-badge badge-launch">Capabilities</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Aggregation Pipeline</div>
                     <div class="entry-desc">Visualize and understand MongoDB's aggregation framework — $match, $group, $lookup, $unwind, $facet, and data transformation stages.</div>
@@ -567,7 +596,7 @@
                         <span class="entry-badge badge-launch">Capabilities</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">State of AI with MongoDB</div>
                     <div class="entry-desc">How Atlas Search and vector search power intelligent AI agents, RAG pipelines, semantic search, and generative AI applications.</div>
@@ -584,7 +613,7 @@
                         <span class="entry-badge badge-launch">Capabilities</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Time Series Collections</div>
                     <div class="entry-desc">MongoDB's optimized time series collections for IoT, metrics, and event data workloads — bucketing, TTL expiration, and granularity settings.</div>
@@ -601,7 +630,7 @@
                         <span class="entry-badge badge-launch">Competitive</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Elasticsearch vs MongoDB</div>
                     <div class="entry-desc">Competitive intelligence briefing — Elastic ecosystem, search feature parity, vector search head-to-head, and where MongoDB has the right to win.</div>
@@ -618,7 +647,7 @@
                         <span class="entry-badge badge-launch">Competitive</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Cosmos DB &amp; DocumentDB</div>
                     <div class="entry-desc">MongoDB Atlas vs Azure Cosmos DB (vCore &amp; RU) and Amazon DocumentDB — architecture, compatibility gaps, wire protocol limitations, and real-world limitations.</div>
@@ -635,7 +664,7 @@
                         <span class="entry-badge badge-launch">Competitive</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Specialty Data Stores</div>
                     <div class="entry-desc">MongoDB Atlas Search vs Elasticsearch, Pinecone, and Qdrant — internal architecture comparisons, vector search, scaling, and positioning.</div>
@@ -652,7 +681,7 @@
                         <span class="entry-badge badge-launch">Competitive</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Oracle to MongoDB</div>
                     <div class="entry-desc">Developer deep dive into migrating from Oracle — architecture comparison, data modeling, transactions, scaling, and automation strategies.</div>
@@ -669,7 +698,7 @@
                         <span class="entry-badge badge-launch">Competitive</span>
                         <span class="entry-author"><svg width="10" height="10" fill="currentColor" viewBox="0 0 16 16">
                                 <circle cx="8" cy="5" r="3.5" />
-                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja Boddapati</span>
+                                <path d="M1 14.5C1 11.5 4 9.5 8 9.5s7 2 7 5" /></svg> Sai Teja</span>
                     </div>
                     <div class="entry-title">Transactional Database Comparison</div>
                     <div class="entry-desc">Multi-document ACID transactions compared with CockroachDB, ScyllaDB, PostgreSQL, and DynamoDB — architecture diagrams, radar charts, and scaling tiers.</div>
@@ -682,8 +711,19 @@
         </div><!-- /timeline -->
     </div><!-- /wrap -->
 
+    <script src="subscribe.js"></script>
+    <script>
+        document.getElementById('heroSubscribeBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            var fab = document.getElementById('subscribeFab');
+            var modal = document.getElementById('sfabModal');
+            if (fab && modal) {
+                fab.classList.remove('hidden');
+                modal.classList.add('open');
+            }
+        });
+    </script>
     <script data-goatcounter="https://mongodbunboxed.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-    <script src="subscribe.js?v=eo-ph-localdev"></script>
 </body>
 
 </html>

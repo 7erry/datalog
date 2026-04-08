@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery: Architecting intelligence — Atlas Vector Search | MongoDB Unpacked</title>
+    <link rel="icon" type="image/png" href="assets/mongodb-leaf.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #001E2B;
+            --bg-secondary: #002838;
+            --bg-card: #003345;
+            --text-primary: #fafafa;
+            --text-secondary: #b8d8e8;
+            --text-muted: #7fa8bc;
+            --accent: #00ED64;
+            --accent-dim: #00c853;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --warn-bg: rgba(248, 113, 113, 0.08);
+            --warn-border: rgba(248, 113, 113, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 30, 43, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .top-bar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .top-bar a:hover { color: var(--accent); }
+        .top-bar .sep { color: var(--text-muted); opacity: 0.35; }
+        .top-bar .doc-name {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .content {
+            max-width: 52rem;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem 5rem;
+        }
+        .callout {
+            margin-bottom: 2rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--warn-border);
+            background: var(--warn-bg);
+        }
+        .callout h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #fca5a5;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .callout p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.65;
+        }
+        .markdown-body h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .markdown-body h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 2rem;
+            margin-bottom: 0.65rem;
+        }
+        .markdown-body h2:first-of-type { margin-top: 0.5rem; }
+        .markdown-body p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body strong { color: var(--text-primary); font-weight: 600; }
+        .markdown-body ol {
+            margin: 0 0 1.25rem 1.25rem;
+            padding-left: 0.5rem;
+        }
+        .markdown-body li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        .markdown-body hr {
+            border: none;
+            border-top: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+        .markdown-body a { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="home.html">MongoDB Unpacked</a>
+        <span class="sep">/</span>
+        <a href="aimongo.html">Interactive companion</a>
+        <span class="sep">/</span>
+        <span class="doc-name">aimongo.discovery.md</span>
+    </div>
+    <div class="content">
+        <div class="callout">
+            <h2>Why this matters</h2>
+            <p>Non-competitive paths—staying on ad hoc tools, fragmented stacks, or “we’ll fix it later” designs—compound as <strong>rework, incidents, and stalled decisions</strong>. The sections below name how status-quo choices fail and what delay actually costs.</p>
+        </div>
+        <article class="markdown-body">
+<h1>Discovery: Architecting intelligence — Atlas Vector Search</h1>
+<p><strong>Companion:</strong> <code>aimongo.html</code></p>
+<h2>Opening minute (discovery call)</h2>
+<p>Appreciate you carving this out. We’re here because <strong>vector search</strong> stopped being a science experiment—it’s part of how products ship search, recommendations, and RAG. The real design question is whether you want <strong>another specialized stack</strong> or a path where vectors live next to the documents and metadata you already trust. I’ll keep this grounded in <strong>architecture choices</strong>: indexing, hybrid search, latency, and who operates it. What’s your north star—<strong>time to first good retrieval</strong>, or <strong>long-term TCO and fewer moving parts</strong>?</p>
+<h2>Why current approaches fall short (without a competitive move)</h2>
+<p>Teams avoiding a deliberate vector strategy default to <strong>yet another database</strong> plus nightly sync jobs and fuzzy ownership. Hybrid search (text + vector + metadata filters) gets bolted on inconsistently, so relevance tuning lives in <strong>notebooks, not production</strong>. Non-competitive here means <strong>integration spaghetti</strong>, not “we picked the wrong algorithm once.”</p>
+<h2>Cost of inaction</h2>
+<p>You stall on <strong>time-to-production</strong> while competitors ship retrieval that matches their domain. TCO climbs from <strong>egress, duplicated data, and specialist headcount</strong>; security reviews multiply because vectors and source documents live in different trust boundaries. The org learns the same HNSW lesson <strong>six times</strong> across squads.</p>
+<h2>Ten open-ended questions (pain points &amp; buying process)</h2>
+<ol>
+<li>What user-facing workflows require vectors today, and what’s on the roadmap for the next two quarters?</li>
+<li>Where are you feeling friction—index build times, relevance, hybrid ranking, filtering, or operational runbooks?</li>
+<li>How many systems currently touch “search + vectors,” and who keeps them in sync?</li>
+<li>What latency and availability targets do product and SRE agree on for retrieval paths?</li>
+<li>How do you measure quality today—human eval, click metrics, offline recall tests—and who owns that loop?</li>
+<li>What security or data-residency constraints apply to embeddings and source documents?</li>
+<li>Who are the economic buyers vs technical champions, and what would they need to see to expand usage?</li>
+<li>Is this purchase tied to a broader cloud or data platform renewal, or a standalone initiative?</li>
+<li>What does your pilot-to-production path look like—who gates go-live?</li>
+<li>What would make you say “we’re glad we didn’t add another specialized database” six months from now?</li>
+</ol>
+        </article>
+    </div>
+</body>
+</html>
