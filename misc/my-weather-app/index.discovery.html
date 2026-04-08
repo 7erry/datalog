@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery: Weather app demo (front-end sandbox) | MongoDB Unpacked</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #001E2B;
+            --text-primary: #fafafa;
+            --text-secondary: #b8d8e8;
+            --text-muted: #7fa8bc;
+            --accent: #00ED64;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --warn-bg: rgba(248, 113, 113, 0.08);
+            --warn-border: rgba(248, 113, 113, 0.35);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            min-height: 100vh;
+            line-height: 1.7;
+        }
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(0, 30, 43, 0.9);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .top-bar a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; }
+        .top-bar a:hover { color: var(--accent); }
+        .sep { color: var(--text-muted); opacity: 0.35; }
+        .doc-name { color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+        .content { max-width: 52rem; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+        .callout {
+            margin-bottom: 2rem;
+            padding: 1rem 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--warn-border);
+            background: var(--warn-bg);
+        }
+        h1 { font-size: 2rem; color: var(--text-primary); margin-bottom: 0.5rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.6rem; }
+        h2 { font-size: 1.2rem; color: var(--text-primary); margin: 1.5rem 0 0.6rem; }
+        p { margin-bottom: 1rem; }
+        ol { margin-left: 1.5rem; }
+        li { margin-bottom: 0.5rem; }
+        strong { color: var(--text-primary); }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="../../home.html">MongoDB Unpacked</a>
+        <span class="sep">/</span>
+        <a href="index.html">Interactive companion</a>
+        <span class="sep">/</span>
+        <span class="doc-name">index.discovery.md</span>
+    </div>
+    <div class="content">
+        <div class="callout">
+            <p>Non-competitive paths compound as <strong>rework, incidents, and stalled decisions</strong>. This page highlights failure modes and the cost of waiting.</p>
+        </div>
+        <h1>Discovery: Weather app demo (front-end sandbox)</h1>
+        <p><strong>Companion:</strong> <code>index.html</code></p>
+        <h2>Opening minute (discovery call)</h2>
+        <p>Good to connect—this is a small front-end demo app we can use to discuss developer experience, API integration, and how quickly teams can ship. The goal is to identify what this prototype should prove so it can move beyond a demo and support a real buying conversation.</p>
+        <h2>Why current approaches fall short (without a competitive move)</h2>
+        <p>Sandbox demos often stay at the UI layer and never validate integration, security, or operational readiness. Teams leave with excitement but no evidence for architecture, security, or procurement stakeholders.</p>
+        <h2>Cost of inaction</h2>
+        <p>You spend cycles on prototypes that do not reduce risk for production. Budget approval slows, technical trust drops, and teams rework the same proof points later under tighter deadlines.</p>
+        <h2>Ten open-ended questions (pain points &amp; buying process)</h2>
+        <ol>
+            <li>What should this prototype prove to move from demo to funded project?</li>
+            <li>Who needs to sign off before this can be productionized?</li>
+            <li>What integration points are mandatory beyond the UI layer?</li>
+            <li>What security constraints apply even in a pilot?</li>
+            <li>How do you define success for this prototype?</li>
+            <li>What timeline is driving the decision?</li>
+            <li>What objections do you expect from architecture or security?</li>
+            <li>Who owns budget if this expands?</li>
+            <li>What evidence would help procurement move faster?</li>
+            <li>What would make the next step obvious after this call?</li>
+        </ol>
+    </div>
+</body>
+</html>
