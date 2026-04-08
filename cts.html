@@ -6,11 +6,13 @@
     (function () {
       try {
         var q = new URLSearchParams(window.location.search);
-        if (String(q.get("discovery")).toLowerCase() !== "true") return;
+        var wantsDiscovery = String(q.get("discovery")).toLowerCase() === "true" || String(q.get("discover")).toLowerCase() === "true";
+        if (!wantsDiscovery) return;
         var parts = window.location.pathname.split("/");
         var file = parts.pop() || "";
         if (!/\.html$/i.test(file) || /\.discovery\.html$/i.test(file)) return;
         q.delete("discovery");
+        q.delete("discover");
         var qs = q.toString();
         var nextFile = file.replace(/\.html$/i, ".discovery.html");
         parts.push(nextFile);
