@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discovery questions | Datalog admin</title>
+  <link rel="icon" type="image/png" href="assets/mongodb-leaf.png" />
+  <style>
+    :root {
+      --bg: #001e2b;
+      --card: #002838;
+      --text: #b8d8e8;
+      --heading: #fafafa;
+      --accent: #00ed64;
+      --border: rgba(0, 237, 100, 0.2);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--heading);
+    }
+    main { padding: 1rem 1.25rem 3rem; max-width: 1100px; margin: 0 auto; }
+    label { font-size: 0.8rem; color: var(--text); opacity: 0.9; }
+    select, button, input[type="text"] {
+      background: var(--card);
+      color: var(--heading);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.45rem 0.65rem;
+      font-size: 0.9rem;
+    }
+    button {
+      cursor: pointer;
+      background: rgba(0, 237, 100, 0.15);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    button:hover { filter: brightness(1.08); }
+    button.danger { background: rgba(248, 113, 113, 0.12); color: #fca5a5; }
+    .row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; margin-bottom: 1rem; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .card h2 { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--accent); }
+    textarea {
+      width: 100%;
+      min-height: 4rem;
+      background: #001a26;
+      color: var(--heading);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      font-size: 0.88rem;
+      resize: vertical;
+    }
+    .q-head { font-size: 0.95rem; color: var(--heading); margin-bottom: 0.35rem; }
+    .muted { font-size: 0.8rem; opacity: 0.75; margin-bottom: 1rem; }
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
+    .status { font-size: 0.85rem; margin-left: auto; }
+    .err { color: #fca5a5; }
+    .ok { color: var(--accent); }
+    code { font-size: 0.8rem; background: #001a26; padding: 0.1rem 0.35rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Discovery questions</h1>
+    <span class="status" id="status"></span>
+  </header>
+  <main>
+    <p class="muted">
+      Run the API from <code>server/</code> (<code>npm install && npm start</code>), then open this page from the same host
+      (for example <code>http://localhost:3000/discovery-admin.html</code>) so calls stay same-origin.
+    </p>
+    <div class="row">
+      <div>
+        <label for="topic">Topic</label><br />
+        <select id="topic"></select>
+      </div>
+      <button type="button" id="reload">Reload</button>
+      <button type="button" id="addQ">Add question</button>
+    </div>
+    <div id="list"></div>
+  </main>
+  <script>
+    const statusEl = document.getElementById("status");
+    const topicSel = document.getElementById("topic");
+    const listEl = document.getElementById("list");
+
+    function setStatus(msg, cls) {
+      statusEl.textContent = msg || "";
+      statusEl.className = "status " + (cls || "");
+    }
+
+    async function api(path, opts) {
+      const r = await fetch(path, {
+        headers: { "Content-Type": "application/json" },
+        ...opts,
+      });
+      if (r.status === 204) return null;
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.error || r.statusText);
+      return data;
+    }
+
+    async function loadTopics() {
+      setStatus("Loading topics…");
+      const data = await api("/api/discovery/topics");
+      topicSel.innerHTML = "";
+      for (const t of data.topics) {
+        const o = document.createElement("option");
+        o.value = t.slug;
+        o.textContent = t.title || t.slug;
+        topicSel.appendChild(o);
+      }
+      setStatus(data.topics.length + " topics", "ok");
+    }
+
+    function renderQuestions(data) {
+      listEl.innerHTML = "";
+      if (!data.questions.length) {
+        listEl.innerHTML = "<p class=\"muted\">No questions yet. Seed from markdown (<code>npm run seed</code> in <code>server/</code>) or add one.</p>";
+        return;
+      }
+      for (const q of data.questions) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.dataset.id = q._id;
+
+        const head = document.createElement("div");
+        head.className = "q-head";
+        head.textContent = "#" + q.order;
+        card.appendChild(head);
+
+        const lq = document.createElement("label");
+        lq.textContent = "Question";
+        card.appendChild(lq);
+        const tq = document.createElement("textarea");
+        tq.className = "field-q";
+        tq.value = q.question || "";
+        card.appendChild(tq);
+
+        const h2d = document.createElement("h2");
+        h2d.textContent = "Description (internal / seller context)";
+        card.appendChild(h2d);
+        const td = document.createElement("textarea");
+        td.className = "field-d";
+        td.value = q.description || "";
+        card.appendChild(td);
+
+        const h2c = document.createElement("h2");
+        h2c.textContent = "Customer response";
+        card.appendChild(h2c);
+        const tc = document.createElement("textarea");
+        tc.className = "field-c";
+        tc.value = q.customerResponse || "";
+        card.appendChild(tc);
+
+        const actions = document.createElement("div");
+        actions.className = "actions";
+        const saveBtn = document.createElement("button");
+        saveBtn.type = "button";
+        saveBtn.className = "save";
+        saveBtn.textContent = "Save";
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "danger del";
+        delBtn.textContent = "Delete";
+        actions.appendChild(saveBtn);
+        actions.appendChild(delBtn);
+        card.appendChild(actions);
+
+        listEl.appendChild(card);
+      }
+
+      listEl.querySelectorAll(".save").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const card = btn.closest(".card");
+          const id = card.dataset.id;
+          const body = {
+            question: card.querySelector(".field-q").value,
+            description: card.querySelector(".field-d").value,
+            customerResponse: card.querySelector(".field-c").value,
+          };
+          try {
+            setStatus("Saving…");
+            await api("/api/discovery/questions/" + id, { method: "PATCH", body: JSON.stringify(body) });
+            setStatus("Saved", "ok");
+          } catch (e) {
+            setStatus(e.message, "err");
+          }
+        });
+      });
+
+      listEl.querySelectorAll(".del").forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const card = btn.closest(".card");
+          const id = card.dataset.id;
+          if (!confirm("Delete this question?")) return;
+          try {
+            setStatus("Deleting…");
+            await api("/api/discovery/questions/" + id, { method: "DELETE" });
+            card.remove();
+            setStatus("Deleted", "ok");
+          } catch (e) {
+            setStatus(e.message, "err");
+          }
+        });
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function loadQuestions() {
+      const slug = topicSel.value;
+      if (!slug) return;
+      setStatus("Loading questions…");
+      try {
+        const data = await api("/api/discovery/topics/" + encodeURIComponent(slug) + "/questions");
+        renderQuestions(data);
+        setStatus(data.questions.length + " questions", "ok");
+      } catch (e) {
+        listEl.innerHTML = "<p class=\"err\">" + escapeHtml(e.message) + "</p>";
+        setStatus(e.message, "err");
+      }
+    }
+
+    document.getElementById("reload").addEventListener("click", () => loadQuestions());
+    topicSel.addEventListener("change", () => loadQuestions());
+
+    document.getElementById("addQ").addEventListener("click", async () => {
+      const slug = topicSel.value;
+      if (!slug) return;
+      const question = prompt("New question text:");
+      if (!question) return;
+      try {
+        setStatus("Creating…");
+        await api("/api/discovery/topics/" + encodeURIComponent(slug) + "/questions", {
+          method: "POST",
+          body: JSON.stringify({ question, description: "", customerResponse: "" }),
+        });
+        await loadQuestions();
+        setStatus("Added", "ok");
+      } catch (e) {
+        setStatus(e.message, "err");
+      }
+    });
+
+    (async () => {
+      try {
+        await loadTopics();
+        await loadQuestions();
+      } catch (e) {
+        setStatus(e.message, "err");
+        listEl.innerHTML = "<p class=\"err\">Cannot reach API. Start the server from <code>server/</code> and open this page via <code>http://localhost:3000/discovery-admin.html</code>.</p>";
+      }
+    })();
+  </script>
+</body>
+</html>
