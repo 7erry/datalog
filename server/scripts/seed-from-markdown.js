@@ -1,5 +1,5 @@
 /**
- * Seed `discovery_topics` and `discovery_questions` from **/*.discovery.md under the repo root.
+ * Seed discovery_topics and discovery_questions from all .discovery.md files under the repo root.
  * Run from server/: npm run seed
  */
 

@@ -36,6 +36,44 @@ Any remaining query params and hash are preserved.
 - `scripts/inject_discovery_query_redirect.py`
   - Injects redirect script into non-discovery HTML pages
 
+## Discovery data in MongoDB (Atlas)
+
+The `server/` app stores editable discovery questions in Atlas under the database name **`datalog`** (configurable via `DB_NAME`).
+
+### Collections
+
+- **`discovery_topics`** — one document per topic (`slug`, `title`, `companionHtml`, `sourceMarkdown`, timestamps)
+- **`discovery_questions`** — questions for a topic (`topicSlug`, `order`, `question`, `description`, `customerResponse`, timestamps)
+
+`description` is internal or seller-facing context for the question. `customerResponse` holds what the customer said (captured during discovery). Together they form the basis for a future **RAG** pipeline; see `GET /api/discovery/rag-context?topicSlug=...` for concatenated text chunks.
+
+### Setup
+
+1. Create (or reuse) an Atlas cluster and user. Add your IP (or `0.0.0.0/0` for development only) under **Network Access**.
+2. Copy `server/.env.example` to `server/.env` and set `MONGODB_URI` (do not commit `.env`). If a connection string was ever shared in plain text, **rotate the password**.
+3. Install and run the API:
+
+```bash
+cd server
+npm install
+npm run seed    # imports **/*.discovery.md into MongoDB
+npm start       # serves static site + API + admin UI
+```
+
+4. Open **http://localhost:3000/discovery-admin.html** to add, edit, or delete questions and to fill in descriptions and customer responses.
+
+### API (summary)
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| GET | `/api/health` | Liveness |
+| GET | `/api/discovery/topics` | List topics |
+| GET | `/api/discovery/questions?topicSlug=` | List questions for a topic (slug may include `/`) |
+| POST | `/api/discovery/questions` | Create question (`topicSlug`, `question`, optional `description`, `customerResponse`) |
+| PATCH | `/api/discovery/questions/:id` | Update fields |
+| DELETE | `/api/discovery/questions/:id` | Remove question |
+| GET | `/api/discovery/rag-context?topicSlug=` | Text chunks for future RAG indexing |
+
 ## Local Notes
 
 - Static site content (no mandatory root build step)

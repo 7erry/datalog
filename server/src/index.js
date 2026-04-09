@@ -61,10 +61,17 @@ app.get("/api/discovery/topics", async (_req, res) => {
   }
 });
 
-/** All questions for a topic, ordered. */
-app.get("/api/discovery/topics/:slug/questions", async (req, res) => {
+/**
+ * All questions for a topic, ordered.
+ * Use ?topicSlug=... so slugs may contain slashes (for example misc/aisearch).
+ */
+app.get("/api/discovery/questions", async (req, res) => {
   try {
-    const slug = req.params.slug;
+    const slug = typeof req.query.topicSlug === "string" ? req.query.topicSlug.trim() : "";
+    if (!slug) {
+      res.status(400).json({ error: "Query parameter topicSlug is required" });
+      return;
+    }
     const mongo = await getClient(MONGODB_URI);
     const db = getDb(mongo, DB_NAME);
     const items = await questionsCollection(db)
@@ -78,11 +85,19 @@ app.get("/api/discovery/topics/:slug/questions", async (req, res) => {
   }
 });
 
-/** Create a new question on a topic (order defaults to last + 1). */
-app.post("/api/discovery/topics/:slug/questions", async (req, res) => {
+/**
+ * Create a new question on a topic (order defaults to last + 1).
+ * Body: { topicSlug, question, description?, customerResponse?, order? }
+ */
+app.post("/api/discovery/questions", async (req, res) => {
   try {
-    const slug = req.params.slug;
+    const slug =
+      typeof req.body?.topicSlug === "string" ? req.body.topicSlug.trim() : "";
     const { question, description, customerResponse, order } = req.body || {};
+    if (!slug) {
+      res.status(400).json({ error: "Field `topicSlug` (string) is required" });
+      return;
+    }
     if (!question || typeof question !== "string") {
       res.status(400).json({ error: "Field `question` (string) is required" });
       return;
@@ -171,10 +186,14 @@ app.delete("/api/discovery/questions/:id", async (req, res) => {
   }
 });
 
-/** Text bundle for future RAG: each answered question as a chunk. */
-app.get("/api/discovery/topics/:slug/rag-context", async (req, res) => {
+/** Text bundle for future RAG: each answered question as a chunk. ?topicSlug= */
+app.get("/api/discovery/rag-context", async (req, res) => {
   try {
-    const slug = req.params.slug;
+    const slug = typeof req.query.topicSlug === "string" ? req.query.topicSlug.trim() : "";
+    if (!slug) {
+      res.status(400).json({ error: "Query parameter topicSlug is required" });
+      return;
+    }
     const mongo = await getClient(MONGODB_URI);
     const db = getDb(mongo, DB_NAME);
     const items = await questionsCollection(db).find({ topicSlug: slug }).sort({ order: 1 }).toArray();

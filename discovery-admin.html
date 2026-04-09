@@ -131,7 +131,8 @@
       for (const t of data.topics) {
         const o = document.createElement("option");
         o.value = t.slug;
-        o.textContent = t.title || t.slug;
+        o.textContent = (t.title || t.slug) + (t.slug && t.title !== t.slug ? " — " + t.slug : "");
+        o.title = t.slug;
         topicSel.appendChild(o);
       }
       setStatus(data.topics.length + " topics", "ok");
@@ -243,7 +244,7 @@
       if (!slug) return;
       setStatus("Loading questions…");
       try {
-        const data = await api("/api/discovery/topics/" + encodeURIComponent(slug) + "/questions");
+        const data = await api("/api/discovery/questions?topicSlug=" + encodeURIComponent(slug));
         renderQuestions(data);
         setStatus(data.questions.length + " questions", "ok");
       } catch (e) {
@@ -262,9 +263,14 @@
       if (!question) return;
       try {
         setStatus("Creating…");
-        await api("/api/discovery/topics/" + encodeURIComponent(slug) + "/questions", {
+        await api("/api/discovery/questions", {
           method: "POST",
-          body: JSON.stringify({ question, description: "", customerResponse: "" }),
+          body: JSON.stringify({
+            topicSlug: slug,
+            question,
+            description: "",
+            customerResponse: "",
+          }),
         });
         await loadQuestions();
         setStatus("Added", "ok");
